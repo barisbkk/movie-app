@@ -5,10 +5,12 @@ import { ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
-    <AuthContextProvider>
-      <AppRouter />
-      <ToastContainer />
-    </AuthContextProvider>
+    <div className="dark:bg-gray-dark-main min-h-screen">
+      <AuthContextProvider>
+        <AppRouter />
+        <ToastContainer />
+      </AuthContextProvider>
+    </div>
   );
 };
 
