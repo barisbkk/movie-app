@@ -3,6 +3,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../auth/firebase";
@@ -23,7 +24,7 @@ const AuthContextProvider = ({ children }) => {
     userObserver();
   }, []);
 
-  const createUser = async (email, password) => {
+  const createUser = async (email, password, displayName) => {
     try {
       //? yeni kullanıcı oluşturmak için kullanılan metod
       const userCredential = await createUserWithEmailAndPassword(
@@ -31,6 +32,9 @@ const AuthContextProvider = ({ children }) => {
         email,
         password
       );
+      await updateProfile(auth.currentUser, {
+        displayName: displayName,
+      });
       // console.log(userCredential);
       navigate("/");
       toastSuccessNotify("Registered successfully!");
@@ -62,10 +66,11 @@ const AuthContextProvider = ({ children }) => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log(user);
-        setCurrentUser();
+        const { email, displayName, photoURL } = user;
+        setCurrentUser({ email, displayName, photoURL });
       } else {
         // user is signed out
-        console.log("logged out");
+        setCurrentUser(false);
       }
     });
   };
@@ -75,7 +80,7 @@ const AuthContextProvider = ({ children }) => {
     toastSuccessNotify("Logged out successfully");
   };
 
-  const values = { createUser, signIn, logOut };
+  const values = { createUser, signIn, logOut, currentUser };
   return (
     <AuthContext.Provider value={values}>{children} </AuthContext.Provider>
   );
