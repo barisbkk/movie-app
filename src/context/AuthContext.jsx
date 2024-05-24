@@ -1,7 +1,10 @@
 import {
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -80,7 +83,22 @@ const AuthContextProvider = ({ children }) => {
     toastSuccessNotify("Logged out successfully");
   };
 
-  const values = { createUser, signIn, logOut, currentUser };
+  //! Google ile giriş fonksiyonunun projenin canlısında çalışması için firebase => authentication => settings => authorized domains kısmında add domain seçeneğiyle projenin canlı linkini eklememiz gerekiyor.
+  const signUpProvider = () => {
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log(result);
+        navigate("/");
+        toastSuccessNotify("Logged in successfully");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const values = { createUser, signIn, logOut, currentUser, signUpProvider };
   return (
     <AuthContext.Provider value={values}>{children} </AuthContext.Provider>
   );
