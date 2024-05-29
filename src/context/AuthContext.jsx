@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -35,6 +36,7 @@ const AuthContextProvider = ({ children }) => {
         email,
         password
       );
+      //? Kullanıcı profilini güncellemek için kullanılan firebase metodu
       await updateProfile(auth.currentUser, {
         displayName: displayName,
       });
@@ -89,7 +91,6 @@ const AuthContextProvider = ({ children }) => {
     const auth = getAuth();
     signInWithPopup(auth, provider)
       .then((result) => {
-        console.log(result);
         navigate("/");
         toastSuccessNotify("Logged in successfully");
       })
@@ -98,7 +99,24 @@ const AuthContextProvider = ({ children }) => {
       });
   };
 
-  const values = { createUser, signIn, logOut, currentUser, signUpProvider };
+  const forgotPassword = (email) => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        toastSuccessNotify("Please cheack your email");
+      })
+      .catch((error) => {
+        toastErrorNotify(error.message);
+      });
+  };
+
+  const values = {
+    createUser,
+    signIn,
+    logOut,
+    currentUser,
+    signUpProvider,
+    forgotPassword,
+  };
   return (
     <AuthContext.Provider value={values}>{children} </AuthContext.Provider>
   );

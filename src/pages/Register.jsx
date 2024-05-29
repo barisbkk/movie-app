@@ -3,7 +3,7 @@ import GoogleIcon from "../assets/icons/GoogleIcon";
 import { useAuthContext } from "../context/AuthContext";
 
 const Register = () => {
-  const { createUser } = useAuthContext();
+  const { createUser, signUpProvider } = useAuthContext();
 
   //* inputlarla çalışıyorsak statelerin ilk değerleri null veya undefined olmamalıdır.
   const [info, setInfo] = useState({
@@ -19,7 +19,7 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password, firstName, lastName } = info;
-    const displayName = `${firstName} ${lastName}`
+    const displayName = `${firstName} ${lastName}`;
     createUser(email, password, displayName);
   };
 
@@ -85,6 +85,7 @@ const Register = () => {
             <button
               className="flex justify-between text-center items-center btn-danger"
               type="button"
+              onClick={signUpProvider}
             >
               Continue with Google
               <GoogleIcon color="currentColor" />
