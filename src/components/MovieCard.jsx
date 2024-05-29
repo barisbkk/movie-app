@@ -5,11 +5,9 @@ const IMG_API = "https://image.tmdb.org/t/p/w1280";
 const defaultImage =
   "https://images.unsplash.com/photo-1581905764498-f1b60bae941a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80";
 
-const MovieCard = ({ title, poster_path, overwiev, vote_average, id }) => {
+const MovieCard = ({ title, poster_path, overview, vote_average, id }) => {
   const { currentUser } = useAuthContext();
-
   const navigate = useNavigate();
-
   const getVoteClass = (vote) => {
     if (vote >= 8) {
       return "green";
@@ -19,7 +17,6 @@ const MovieCard = ({ title, poster_path, overwiev, vote_average, id }) => {
       return "red";
     }
   };
-
   return (
     <div
       className="movie"
@@ -35,14 +32,13 @@ const MovieCard = ({ title, poster_path, overwiev, vote_average, id }) => {
         <h5>{title}</h5>
         {currentUser && (
           <span className={`tag ${getVoteClass(vote_average)}`}>
-            {" "}
             {vote_average.toFixed(1)}
           </span>
         )}
       </div>
       <div className="movie-over">
-        <h2> Overwiev </h2>
-        <p> {overwiev} </p>
+        <h2>Overview</h2>
+        <p>{overview}</p>
       </div>
     </div>
   );
